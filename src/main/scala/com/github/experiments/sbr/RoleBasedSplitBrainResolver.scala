@@ -18,6 +18,7 @@ import akka.cluster.MemberStatus
 import akka.cluster.MemberStatus.Down
 import akka.cluster.MemberStatus.Exiting
 import akka.cluster.UniqueAddress
+import com.github.experiments.LoggerHolder
 
 import scala.collection.immutable.SortedSet
 import scala.language.postfixOps
@@ -34,7 +35,8 @@ object RoleBasedSplitBrainResolver {
   case object Tick
 }
 
-class RoleBasedSplitBrainResolver(stableAfter: FiniteDuration, essentialRoles: Set[String]) extends Actor with ActorLogging {
+class RoleBasedSplitBrainResolver(stableAfter: FiniteDuration, essentialRoles: Set[String]) extends Actor  with LoggerHolder{
+
 
   import RoleBasedSplitBrainResolver._
   import context.dispatcher
@@ -156,8 +158,8 @@ class RoleBasedSplitBrainResolver(stableAfter: FiniteDuration, essentialRoles: S
 
           val downSelf = nodesToDown.contains(selfUniqueAddress)
 
-          log.info("downAction: {}, nodesToDown: [{}], downSelf: {}, (unreachable.size, members.size): {}", downAction,
-            nodesToDown.map(_.address).mkString(", "), downSelf, (unreachable.size, members.size))
+          log.info(s"downAction: ${downAction}, nodesToDown: [${ nodesToDown.map(_.address).mkString(", ")}], downSelf: ${downSelf}, (unreachable.size, members.size): ${(unreachable.size, members.size)}")
+
 
           nodesToDown.foreach(node ⇒ if (node != selfUniqueAddress) down(node.address))
 

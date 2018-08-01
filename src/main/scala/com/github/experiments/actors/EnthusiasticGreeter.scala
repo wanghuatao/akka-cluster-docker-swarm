@@ -1,6 +1,7 @@
 package com.github.experiments.actors
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
+import com.github.experiments.LoggerHolder
 import com.github.experiments.actors.Member.{HelloSaid, SayHello}
 import com.github.experiments.actors.Member.Sharding.EntityEnvelope
 
@@ -11,7 +12,7 @@ object EnthusiasticGreeter {
   def props(memberRegion: ActorRef): Props = Props(new EnthusiasticGreeter(memberRegion))
 }
 
-class EnthusiasticGreeter(memberRegion: ActorRef) extends Actor with ActorLogging {
+class EnthusiasticGreeter(memberRegion: ActorRef) extends Actor with LoggerHolder {
   override def preStart(): Unit = {
     implicit val ec: ExecutionContext = context.dispatcher
     val random = new scala.util.Random()

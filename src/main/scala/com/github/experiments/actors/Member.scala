@@ -1,11 +1,11 @@
 package com.github.experiments.actors
 
 import akka.actor.SupervisorStrategy.Stop
-import akka.actor.{Actor, ActorLogging, ReceiveTimeout}
+import akka.actor.{Actor, ReceiveTimeout}
 import akka.cluster.sharding.ShardRegion
 import akka.cluster.sharding.ShardRegion.Passivate
-import com.github.experiments.SettingsExtension
 import com.github.experiments.actors.Member._
+import com.github.experiments.{LoggerHolder, SettingsExtension}
 
 object Member {
   sealed trait Command
@@ -29,7 +29,7 @@ object Member {
   }
 }
 
-class Member extends Actor with ActorLogging {
+class Member extends Actor with LoggerHolder {
   val settings = SettingsExtension(context.system)
 
   override def preStart(): Unit = {
